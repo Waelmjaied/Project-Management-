@@ -1,0 +1,65 @@
+{
+  "cost": {
+    "baseline_mean": {
+      "r2_mean": -0.0168,
+      "r2_std": 0.0135,
+      "mae_mean": 4756.75,
+      "mae_std": 350.04
+    },
+    "linear_regression": {
+      "r2_mean": 0.8904,
+      "r2_std": 0.0189,
+      "mae_mean": 1470.52,
+      "mae_std": 178.41
+    },
+    "random_forest": {
+      "r2_mean": 0.9064,
+      "r2_std": 0.0182,
+      "mae_mean": 1285.61,
+      "mae_std": 181.26
+    },
+    "final_model_holdout_test": {
+      "r2": 0.9216,
+      "mae": 1109.3,
+      "improvement_over_baseline_r2": 0.9384
+    },
+    "feature_importance": {
+      "hourly_rate": 0.6531,
+      "task_complexity": 0.1869,
+      "effective_hours": 0.0827,
+      "team_size": 0.0629,
+      "experience": 0.0143
+    }
+  },
+  "duration": {
+    "baseline_mean": {
+      "r2_mean": -0.0041,
+      "r2_std": 0.0036,
+      "mae_mean": 7.54,
+      "mae_std": 0.76
+    },
+    "linear_regression": {
+      "r2_mean": 0.8157,
+      "r2_std": 0.041,
+      "mae_mean": 3.16,
+      "mae_std": 0.29
+    },
+    "random_forest": {
+      "r2_mean": 0.9266,
+      "r2_std": 0.0164,
+      "mae_mean": 1.9,
+      "mae_std": 0.24
+    },
+    "final_model_holdout_test": {
+      "r2": 0.9187,
+      "mae": 1.86,
+      "improvement_over_baseline_r2": 0.9228
+    },
+    "feature_importance": {
+      "effective_hours": 0.5588,
+      "team_size": 0.413,
+      "experience": 0.0161,
+      "task_complexity": 0.012
+    }
+  }
+}
