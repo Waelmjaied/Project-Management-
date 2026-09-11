@@ -9,459 +9,296 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg: #07090d;
-      --card: rgba(255, 255, 255, 0.04);
-      --card-border: rgba(255, 255, 255, 0.09);
-      --card-border-hover: rgba(255, 255, 255, 0.16);
-      --text: #f2f5f8;
-      --muted: #8a94a6;
-      --muted-2: #5b6575;
-      --accent: #7c5cff;
-      --accent-2: #00e0b8;
-      --accent-grad: linear-gradient(135deg, #7c5cff 0%, #00d4ff 55%, #00e0b8 100%);
+      --bg: #06080c;
+      --card: rgba(255, 255, 255, 0.035);
+      --line: rgba(255, 255, 255, 0.08);
+      --line-2: rgba(255, 255, 255, 0.14);
+      --text: #eef2f7;
+      --muted: #7d8899;
+      --dim: #4a5464;
+      --violet: #7c5cff;
+      --cyan: #00d4ff;
+      --mint: #00e0b8;
+      --grad: linear-gradient(135deg, #7c5cff 0%, #00d4ff 55%, #00e0b8 100%);
       --danger: #ff6b81;
       --mono: "JetBrains Mono", "SFMono-Regular", Consolas, monospace;
       --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --display: "Space Grotesk", var(--sans);
-      --radius: 20px;
+      --r: 16px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { scroll-behavior: smooth; }
+    html, body { height: 100%; }
 
     body {
-      min-height: 100vh;
       background: var(--bg);
       font-family: var(--sans);
       color: var(--text);
+      height: 100dvh;
+      overflow: hidden;
       display: flex;
-      align-items: flex-start;
-      justify-content: center;
-      padding: 64px 20px 96px;
+      flex-direction: column;
       position: relative;
-      overflow-x: hidden;
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ---------- ambient background ---------- */
-    .orb {
-      position: fixed;
-      border-radius: 50%;
-      filter: blur(110px);
-      opacity: 0.5;
-      pointer-events: none;
-      z-index: 0;
-      animation: drift 22s ease-in-out infinite alternate;
-    }
-    .orb-1 { width: 520px; height: 520px; top: -180px; left: -120px;
-      background: radial-gradient(circle, rgba(124,92,255,0.55), transparent 65%); }
-    .orb-2 { width: 460px; height: 460px; bottom: -160px; right: -100px;
-      background: radial-gradient(circle, rgba(0,224,184,0.4), transparent 65%);
-      animation-delay: -8s; animation-duration: 26s; }
-    .orb-3 { width: 380px; height: 380px; top: 40%; left: 55%;
-      background: radial-gradient(circle, rgba(0,180,255,0.3), transparent 65%);
-      animation-delay: -14s; }
-
-    @keyframes drift {
-      from { transform: translate(0, 0) scale(1); }
-      to   { transform: translate(60px, 40px) scale(1.12); }
-    }
+    /* ---------- ambient bg ---------- */
+    .orb { position: fixed; border-radius: 50%; filter: blur(120px); opacity: .45; pointer-events: none; z-index: 0; animation: drift 24s ease-in-out infinite alternate; }
+    .orb-1 { width: 560px; height: 560px; top: -220px; left: -140px; background: radial-gradient(circle, rgba(124,92,255,.5), transparent 65%); }
+    .orb-2 { width: 480px; height: 480px; bottom: -200px; right: -120px; background: radial-gradient(circle, rgba(0,224,184,.35), transparent 65%); animation-delay: -9s; }
+    @keyframes drift { from { transform: translate(0,0) scale(1); } to { transform: translate(50px,36px) scale(1.1); } }
 
     .grid-overlay {
       position: fixed; inset: 0; z-index: 0; pointer-events: none;
       background-image:
-              linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
-              linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
-      background-size: 56px 56px;
-      mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 30%, transparent 75%);
+              linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+              linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 90% 80% at 50% 40%, black 20%, transparent 80%);
     }
 
-    /* ---------- layout ---------- */
-    .wrap {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 1080px;
-      display: grid;
-      grid-template-columns: 1fr 1.25fr;
-      gap: 28px;
-      align-items: start;
-    }
+    .app { position: relative; z-index: 1; height: 100%; display: flex; flex-direction: column; }
 
-    @media (max-width: 880px) {
-      .wrap { grid-template-columns: 1fr; }
+    /* ---------- header ---------- */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 16px 28px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(6,8,12,.6);
+      backdrop-filter: blur(12px);
+      flex-shrink: 0;
     }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand h1 {
+      font-family: var(--display); font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em;
+    }
+    .brand .ver {
+      font-family: var(--mono); font-size: .62rem; color: var(--dim);
+      border: 1px solid var(--line); padding: 2px 8px; border-radius: 999px;
+    }
+    .head-right { display: flex; align-items: center; gap: 16px; }
 
-    /* ---------- hero / left column ---------- */
-    .hero {
-      padding: 12px 8px;
-      position: sticky;
-      top: 48px;
+    .live-tag {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-family: var(--mono); font-size: .62rem; letter-spacing: .14em;
+      color: var(--mint); border: 1px solid rgba(0,224,184,.3);
+      background: rgba(0,224,184,.06); padding: 5px 12px; border-radius: 999px;
     }
+    .live-tag .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--mint); box-shadow: 0 0 8px var(--mint); animation: pulse 2s ease-in-out infinite; }
+    .live-tag.busy { color: var(--cyan); border-color: rgba(0,212,255,.3); background: rgba(0,212,255,.06); }
+    .live-tag.busy .dot { background: var(--cyan); box-shadow: 0 0 8px var(--cyan); animation: pulse .6s ease-in-out infinite; }
+    .live-tag.err { color: var(--danger); border-color: rgba(255,107,129,.35); background: rgba(255,107,129,.07); }
+    .live-tag.err .dot { background: var(--danger); box-shadow: 0 0 8px var(--danger); animation: none; }
+    @keyframes pulse { 50% { opacity: .3; } }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      font-family: var(--mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--accent-2);
-      border: 1px solid rgba(0,224,184,0.3);
-      background: rgba(0,224,184,0.06);
-      padding: 6px 14px;
-      border-radius: 999px;
-      margin-bottom: 26px;
-    }
-    .badge .dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--accent-2);
-      box-shadow: 0 0 10px var(--accent-2);
-      animation: pulse 2.2s ease-in-out infinite;
-    }
-    @keyframes pulse { 50% { opacity: 0.35; } }
-
-    .hero h1 {
-      font-family: var(--display);
-      font-size: clamp(2.2rem, 4.5vw, 3.2rem);
-      font-weight: 700;
-      line-height: 1.08;
-      letter-spacing: -0.03em;
-      margin-bottom: 20px;
-    }
-    .hero h1 .grad {
-      background: var(--accent-grad);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero p {
-      color: var(--muted);
-      font-size: 0.98rem;
-      line-height: 1.7;
-      max-width: 42ch;
-      margin-bottom: 36px;
-    }
-
-    .hero-stats {
-      display: flex;
-      gap: 36px;
-    }
-    .hstat .num {
-      font-family: var(--display);
-      font-size: 1.5rem;
-      font-weight: 600;
-      background: var(--accent-grad);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .hstat .lbl {
-      font-size: 0.72rem;
-      color: var(--muted-2);
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      margin-top: 4px;
-    }
-
-    /* ---------- card ---------- */
-    .card {
-      background: var(--card);
-      border: 1px solid var(--card-border);
-      border-radius: var(--radius);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
-      overflow: hidden;
-      animation: rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-    }
-    @keyframes rise {
-      from { opacity: 0; transform: translateY(24px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    .card-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      padding: 24px 28px;
-      border-bottom: 1px solid rgba(255,255,255,0.07);
-    }
-
-    .card-head .title {
-      display: flex; align-items: center; gap: 12px;
-    }
-    .card-head .title svg { flex-shrink: 0; }
-    .card-head h2 {
-      font-family: var(--display);
-      font-size: 1.05rem;
-      font-weight: 600;
-      letter-spacing: -0.01em;
-    }
-    .card-head .sub {
-      font-size: 0.72rem;
-      color: var(--muted-2);
-      margin-top: 2px;
-    }
-
-    /* currency pill selector */
-    .cur-pills {
-      display: flex;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
-      border-radius: 999px;
-      padding: 3px;
-      gap: 2px;
-    }
+    .cur-pills { display: flex; background: rgba(255,255,255,.05); border: 1px solid var(--line); border-radius: 999px; padding: 3px; gap: 2px; }
     .cur-pills button {
-      all: unset;
-      cursor: pointer;
-      font-family: var(--mono);
-      font-size: 0.7rem;
-      font-weight: 500;
-      color: var(--muted);
-      padding: 5px 12px;
-      border-radius: 999px;
-      transition: all 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+      all: unset; cursor: pointer;
+      font-family: var(--mono); font-size: .68rem; font-weight: 500; color: var(--muted);
+      padding: 5px 11px; border-radius: 999px;
+      transition: all .25s cubic-bezier(.22,1,.36,1);
     }
     .cur-pills button:hover { color: var(--text); }
-    .cur-pills button.active {
-      background: var(--accent-grad);
-      color: #0a0d12;
-      font-weight: 600;
-      box-shadow: 0 4px 14px rgba(0,180,255,0.35);
+    .cur-pills button.active { background: var(--grad); color: #0a0d12; font-weight: 600; box-shadow: 0 4px 14px rgba(0,180,255,.3); }
+
+    /* ---------- main ---------- */
+    main {
+      flex: 1;
+      display: grid;
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      gap: 20px;
+      padding: 20px 28px;
+      min-height: 0;
     }
 
-    /* ---------- fields ---------- */
-    .fields { padding: 10px 28px 6px; }
-
-    .field {
-      padding: 22px 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-      animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 24px 60px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.05);
+      display: flex; flex-direction: column;
+      min-height: 0;
+      animation: rise .6s cubic-bezier(.22,1,.36,1) both;
     }
-    .field:nth-child(1) { animation-delay: 0.05s; }
-    .field:nth-child(2) { animation-delay: 0.10s; }
-    .field:nth-child(3) { animation-delay: 0.15s; }
-    .field:nth-child(4) { animation-delay: 0.20s; }
-    .field:nth-child(5) { animation-delay: 0.25s; }
+    @keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ---------- form panel ---------- */
+    .panel-head {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 22px;
+      border-bottom: 1px solid var(--line);
+      flex-shrink: 0;
+    }
+    .panel-head h2 { font-family: var(--display); font-size: .92rem; font-weight: 600; }
+    .panel-head .sub { font-family: var(--mono); font-size: .62rem; color: var(--dim); margin-top: 3px; letter-spacing: .08em; }
+
+    .fields { padding: 4px 22px; overflow-y: auto; flex: 1; min-height: 0; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; }
+    .fields::-webkit-scrollbar { width: 5px; }
+    .fields::-webkit-scrollbar-thumb { background: var(--line-2); border-radius: 999px; }
+
+    .field { padding: 13px 0; border-bottom: 1px solid rgba(255,255,255,.05); animation: rise .5s cubic-bezier(.22,1,.36,1) both; }
+    .field:nth-child(1){animation-delay:.03s}.field:nth-child(2){animation-delay:.06s}.field:nth-child(3){animation-delay:.09s}
+    .field:nth-child(4){animation-delay:.12s}.field:nth-child(5){animation-delay:.15s}
     .field:last-child { border-bottom: none; }
 
-    .field-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 6px;
-    }
-    .field-top label {
-      font-size: 0.88rem;
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
+    .field-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+    .field-top label { font-size: .8rem; font-weight: 600; letter-spacing: .01em; }
     .readout {
-      font-family: var(--mono);
-      font-size: 0.85rem;
-      font-weight: 600;
+      margin-left: auto;
+      font-family: var(--mono); font-size: .76rem; font-weight: 600;
       color: var(--text);
-      background: rgba(124,92,255,0.12);
-      border: 1px solid rgba(124,92,255,0.35);
-      border-radius: 8px;
-      padding: 4px 12px;
-      min-width: 56px;
-      text-align: center;
-      transition: transform 0.15s ease;
+      background: rgba(124,92,255,.13);
+      border: 1px solid rgba(124,92,255,.35);
+      border-radius: 7px; padding: 3px 10px; min-width: 50px; text-align: center;
+      transition: transform .15s ease;
     }
-    .readout.bump { transform: scale(1.08); }
+    .readout.bump { transform: scale(1.1); }
 
-    .field-help {
-      font-size: 0.78rem;
-      color: var(--muted);
-      line-height: 1.55;
-      margin-bottom: 16px;
-      max-width: 52ch;
+    /* help tooltip */
+    .hint { position: relative; display: inline-flex; color: var(--dim); cursor: help; }
+    .hint svg { display: block; }
+    .hint::after {
+      content: attr(data-tip);
+      position: absolute; bottom: calc(100% + 8px); left: 50%;
+      transform: translateX(-50%) translateY(4px);
+      width: 250px;
+      background: #10141c;
+      border: 1px solid var(--line-2);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: .7rem; line-height: 1.55; color: var(--muted); font-weight: 400;
+      opacity: 0; pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+      box-shadow: 0 14px 40px rgba(0,0,0,.55);
+      z-index: 50;
     }
+    .hint:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* modern range slider */
     input[type="range"] {
       --fill: 50%;
       width: 100%;
-      -webkit-appearance: none;
-      appearance: none;
-      height: 6px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #7c5cff 0%, #00d4ff var(--fill), rgba(255,255,255,0.08) var(--fill));
-      outline: none;
-      margin: 10px 0 6px;
-      cursor: pointer;
+      -webkit-appearance: none; appearance: none;
+      height: 5px; border-radius: 999px;
+      background: linear-gradient(90deg, #7c5cff 0%, #00d4ff var(--fill), rgba(255,255,255,.08) var(--fill));
+      outline: none; cursor: pointer;
     }
     input[type="range"]::-webkit-slider-thumb {
-      -webkit-appearance: none;
-      appearance: none;
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: #fff;
-      border: none;
-      box-shadow: 0 0 0 5px rgba(124,92,255,0.25), 0 2px 10px rgba(0,0,0,0.5);
-      cursor: grab;
-      transition: box-shadow 0.2s, transform 0.2s;
+      -webkit-appearance: none; appearance: none;
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #fff; border: none;
+      box-shadow: 0 0 0 4px rgba(124,92,255,.28), 0 2px 8px rgba(0,0,0,.5);
+      cursor: grab; transition: transform .15s, box-shadow .2s;
     }
-    input[type="range"]::-webkit-slider-thumb:hover {
-      box-shadow: 0 0 0 8px rgba(124,92,255,0.3), 0 2px 12px rgba(0,0,0,0.5);
-      transform: scale(1.1);
-    }
-    input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.15); }
+    input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); box-shadow: 0 0 0 7px rgba(124,92,255,.3), 0 2px 10px rgba(0,0,0,.5); }
+    input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; }
     input[type="range"]::-moz-range-thumb {
-      width: 20px; height: 20px;
-      border-radius: 50%;
-      background: #fff;
-      border: none;
-      box-shadow: 0 0 0 5px rgba(124,92,255,0.25), 0 2px 10px rgba(0,0,0,0.5);
-      cursor: grab;
+      width: 16px; height: 16px; border-radius: 50%; background: #fff; border: none;
+      box-shadow: 0 0 0 4px rgba(124,92,255,.28), 0 2px 8px rgba(0,0,0,.5); cursor: grab;
     }
-    input[type="range"]::-moz-range-track {
-      height: 6px; border-radius: 999px; background: transparent;
-    }
+    .scale-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: .6rem; color: var(--dim); margin-top: 5px; }
 
-    .scale-labels {
-      display: flex;
-      justify-content: space-between;
-      font-family: var(--mono);
-      font-size: 0.66rem;
-      color: var(--muted-2);
-      margin-top: 4px;
-    }
-
-    /* ---------- submit ---------- */
     .submit-btn {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      width: calc(100% - 56px);
-      margin: 20px 28px 26px;
-      padding: 16px;
-      border: none;
-      border-radius: 14px;
-      background: var(--accent-grad);
-      background-size: 160% 160%;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      margin: 12px 22px 16px;
+      padding: 12px;
+      border: none; border-radius: 12px;
+      background: var(--grad); background-size: 160% 160%;
       color: #0a0d12;
-      font-family: var(--display);
-      font-size: 0.98rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      font-family: var(--display); font-size: .88rem; font-weight: 700; letter-spacing: .02em;
       cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      transition: background-position 0.5s ease, transform 0.2s ease, box-shadow 0.3s ease;
-      box-shadow: 0 10px 30px rgba(0,180,255,0.25);
+      transition: background-position .5s, transform .15s, box-shadow .3s;
+      box-shadow: 0 8px 24px rgba(0,180,255,.22);
+      flex-shrink: 0;
     }
-    .submit-btn:hover:not(:disabled) {
-      background-position: 100% 50%;
-      transform: translateY(-2px);
-      box-shadow: 0 16px 40px rgba(0,180,255,0.4);
-    }
+    .submit-btn:hover:not(:disabled) { background-position: 100% 50%; transform: translateY(-1px); box-shadow: 0 12px 32px rgba(0,180,255,.35); }
     .submit-btn:active:not(:disabled) { transform: translateY(0); }
-    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .submit-btn .arrow { transition: transform 0.3s ease; }
-    .submit-btn:hover:not(:disabled) .arrow { transform: translateX(4px); }
-
-    .spinner {
-      width: 16px; height: 16px;
-      border: 2px solid rgba(10,13,18,0.3);
-      border-top-color: #0a0d12;
-      border-radius: 50%;
-      animation: spin 0.7s linear infinite;
-      display: none;
-    }
+    .submit-btn:disabled { opacity: .6; cursor: not-allowed; }
+    .spinner { width: 14px; height: 14px; border: 2px solid rgba(10,13,18,.3); border-top-color: #0a0d12; border-radius: 50%; animation: spin .7s linear infinite; display: none; }
     .submit-btn.loading .spinner { display: inline-block; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ---------- error ---------- */
+    /* ---------- results panel ---------- */
+    .results-panel { position: relative; overflow: hidden; }
+    .results-panel::before {
+      content: ""; position: absolute; inset: 0; border-radius: var(--r); padding: 1px;
+      background: var(--grad);
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor; mask-composite: exclude;
+      opacity: .55; pointer-events: none;
+    }
+
+    .out-body { flex: 1; display: flex; flex-direction: column; padding: 6px 22px 14px; min-height: 0; }
+
+    .out-empty {
+      flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 12px; color: var(--dim); text-align: center;
+    }
+    .out-empty .glyph {
+      font-family: var(--mono); font-size: 2.2rem;
+      background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+      letter-spacing: .1em;
+    }
+    .out-empty p { font-size: .75rem; line-height: 1.6; max-width: 30ch; }
+
+    .out { display: none; flex-direction: column; flex: 1; min-height: 0; }
+    .out.show { display: flex; animation: rise .45s cubic-bezier(.22,1,.36,1) both; }
+
+    .metric { padding: 12px 0 14px; border-bottom: 1px dashed rgba(255,255,255,.09); }
+    .metric .label { font-family: var(--mono); font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
+    .metric .value {
+      font-family: var(--display); font-size: clamp(1.5rem, 2.6vw, 2.1rem); font-weight: 700; letter-spacing: -.02em;
+      background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent;
+      line-height: 1.1;
+    }
+    .metric .value .unit { font-family: var(--mono); font-size: .75rem; font-weight: 500; -webkit-text-fill-color: var(--muted); margin-left: 6px; }
+    .metric .extra { font-family: var(--mono); font-size: .66rem; color: var(--dim); margin-top: 5px; }
+
+    .kv { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 14px; padding: 12px 0; border-bottom: 1px dashed rgba(255,255,255,.09); }
+    .kv .item .k { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); }
+    .kv .item .v { font-family: var(--mono); font-size: .82rem; font-weight: 600; color: var(--text); margin-top: 3px; }
+    .kv .item .v em { font-style: normal; color: var(--muted); font-size: .64rem; }
+
+    .spark-wrap { padding: 12px 0 4px; flex: 1; display: flex; flex-direction: column; min-height: 0; }
+    .spark-wrap .k { font-family: var(--mono); font-size: .58rem; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; display: flex; justify-content: space-between; }
+    .spark-wrap .k .trend { color: var(--mint); }
+    .spark-wrap canvas { width: 100%; flex: 1; min-height: 46px; }
+
+    .footnote { font-size: .62rem; color: var(--dim); line-height: 1.55; padding-top: 10px; flex-shrink: 0; }
+
     .error {
-      display: none;
-      margin: 0 28px 22px;
-      padding: 13px 16px;
-      border: 1px solid rgba(255,107,129,0.35);
-      background: rgba(255,107,129,0.08);
-      border-radius: 12px;
-      color: var(--danger);
-      font-size: 0.82rem;
-      align-items: center;
-      gap: 10px;
-      animation: shake 0.4s ease;
+      display: none; align-items: center; gap: 8px;
+      margin: 0 22px 12px; padding: 10px 13px;
+      border: 1px solid rgba(255,107,129,.35); background: rgba(255,107,129,.08);
+      border-radius: 10px; color: var(--danger); font-size: .74rem;
+      animation: shake .4s ease; flex-shrink: 0;
     }
     .error.show { display: flex; }
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-5px); }
-      75% { transform: translateX(5px); }
-    }
+    @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
 
-    /* ---------- results ---------- */
-    .results {
-      display: none;
-      grid-template-columns: 1fr 1fr;
-      border-top: 1px solid rgba(255,255,255,0.07);
-      background: rgba(255,255,255,0.02);
+    /* ---------- status bar ---------- */
+    footer {
+      display: flex; align-items: center; gap: 22px;
+      padding: 9px 28px;
+      border-top: 1px solid var(--line);
+      background: rgba(6,8,12,.6);
+      backdrop-filter: blur(12px);
+      font-family: var(--mono); font-size: .62rem; color: var(--dim);
+      letter-spacing: .06em;
+      flex-shrink: 0;
     }
-    .results.show { display: grid; animation: rise 0.5s cubic-bezier(0.22,1,0.36,1) both; }
+    footer .sep { color: rgba(255,255,255,.12); }
+    footer .ok { color: var(--mint); }
+    footer .warn { color: var(--danger); }
+    footer .right { margin-left: auto; display: flex; gap: 22px; }
 
-    .result-cell { padding: 26px 28px 30px; position: relative; overflow: hidden; }
-    .result-cell + .result-cell { border-left: 1px solid rgba(255,255,255,0.07); }
-    .result-cell::before {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; height: 2px;
-      background: var(--accent-grad);
-      opacity: 0.7;
-    }
-    .result-cell .label {
-      font-family: var(--mono);
-      font-size: 0.66rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--muted-2);
-      margin-bottom: 10px;
-    }
-    .result-cell .value {
-      font-family: var(--display);
-      font-size: clamp(1.6rem, 3vw, 2rem);
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      background: var(--accent-grad);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-    .result-cell .unit {
-      font-family: var(--mono);
-      font-size: 0.8rem;
-      font-weight: 500;
-      color: var(--muted);
-      margin-left: 6px;
-      -webkit-text-fill-color: var(--muted);
-    }
-
-    /* ---------- footnote ---------- */
-    .footnote {
-      padding: 18px 28px 24px;
-      font-size: 0.72rem;
-      color: var(--muted-2);
-      border-top: 1px solid rgba(255,255,255,0.07);
-      line-height: 1.6;
-    }
-
-    @media (max-width: 480px) {
-      body { padding: 32px 14px 64px; }
-      .hero { position: static; }
-      .hero-stats { gap: 24px; }
-      .results { grid-template-columns: 1fr; }
-      .result-cell + .result-cell { border-left: none; border-top: 1px solid rgba(255,255,255,0.07); }
-      .card-head { flex-wrap: wrap; }
+    @media (max-width: 920px) {
+      body { overflow: auto; height: auto; }
+      .app { height: auto; }
+      main { grid-template-columns: 1fr; }
+      .fields { overflow: visible; }
+      .out-empty { padding: 40px 0; }
     }
   </style>
   <base target="_blank">
@@ -470,41 +307,27 @@
 
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
-<div class="orb orb-3"></div>
 <div class="grid-overlay"></div>
 
-<div class="wrap">
+<div class="app">
 
-  <!-- Left: hero -->
-  <section class="hero">
-    <div class="badge"><span class="dot"></span> ML-powered forecasting</div>
-    <h1>Estimate your project <span class="grad">before</span> you commit.</h1>
-    <p>Slide through five inputs and get an instant cost &amp; duration forecast from a model trained on project data. Tune the knobs, run the estimate, plan with confidence.</p>
-    <div class="hero-stats">
-      <div class="hstat"><div class="num">5</div><div class="lbl">Inputs</div></div>
-      <div class="hstat"><div class="num">2</div><div class="lbl">Forecasts</div></div>
-      <div class="hstat"><div class="num">4</div><div class="lbl">Currencies</div></div>
+  <!-- ======= header ======= -->
+  <header>
+    <div class="brand">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+        <rect x="3" y="3" width="8" height="8" rx="2.5" fill="url(#g1)"/>
+        <rect x="13" y="3" width="8" height="8" rx="2.5" fill="url(#g1)" opacity=".5"/>
+        <rect x="3" y="13" width="8" height="8" rx="2.5" fill="url(#g1)" opacity=".5"/>
+        <rect x="13" y="13" width="8" height="8" rx="4" fill="url(#g1)"/>
+        <defs><linearGradient id="g1" x1="0" y1="0" x2="24" y2="24">
+          <stop stop-color="#7c5cff"/><stop offset="1" stop-color="#00e0b8"/>
+        </linearGradient></defs>
+      </svg>
+      <h1>Project Estimator</h1>
+      <span class="ver">rf-model v1.0</span>
     </div>
-  </section>
-
-  <!-- Right: estimator card -->
-  <div class="card">
-    <div class="card-head">
-      <div class="title">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-          <rect x="3" y="3" width="8" height="8" rx="2.5" fill="url(#g1)"/>
-          <rect x="13" y="3" width="8" height="8" rx="2.5" fill="url(#g1)" opacity="0.55"/>
-          <rect x="3" y="13" width="8" height="8" rx="2.5" fill="url(#g1)" opacity="0.55"/>
-          <rect x="13" y="13" width="8" height="8" rx="4" fill="url(#g1)"/>
-          <defs><linearGradient id="g1" x1="0" y1="0" x2="24" y2="24">
-            <stop stop-color="#7c5cff"/><stop offset="1" stop-color="#00e0b8"/>
-          </linearGradient></defs>
-        </svg>
-        <div>
-          <h2>Project Estimator</h2>
-          <div class="sub">Random forest · synthetic training data</div>
-        </div>
-      </div>
+    <div class="head-right">
+      <div class="live-tag" id="live-tag"><span class="dot"></span><span id="live-tag-text">READY</span></div>
       <div class="cur-pills" id="currency-pills">
         <button type="button" data-cur="DT" class="active">DT</button>
         <button type="button" data-cur="USD">USD</button>
@@ -512,89 +335,158 @@
         <button type="button" data-cur="GBP">GBP</button>
       </div>
     </div>
+  </header>
 
-    <form id="predict-form" novalidate>
-      <div class="fields">
+  <!-- ======= main ======= -->
+  <main>
 
-        <div class="field">
-          <div class="field-top">
-            <label for="task_complexity">Task complexity</label>
-            <span class="readout" id="task_complexity-readout">3</span>
-          </div>
-          <p class="field-help">How intricate the work is: 1 is routine, well-understood work; 5 is unfamiliar territory with a lot of unknowns or moving parts.</p>
-          <input type="range" id="task_complexity" min="1" max="5" step="1" value="3" />
-          <div class="scale-labels"><span>1 · routine</span><span>5 · complex</span></div>
+    <!-- form -->
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>Input parameters</h2>
+          <div class="sub">ADJUST · AUTO-RECOMPUTES ON RELEASE</div>
         </div>
-
-        <div class="field">
-          <div class="field-top">
-            <label for="team_size">Team size</label>
-            <span class="readout" id="team_size-readout">5</span>
-          </div>
-          <p class="field-help">Number of people actively working the project. Bigger teams finish faster but coordination overhead eats into that gain.</p>
-          <input type="range" id="team_size" min="1" max="10" step="1" value="5" />
-          <div class="scale-labels"><span>1 person</span><span>10 people</span></div>
-        </div>
-
-        <div class="field">
-          <div class="field-top">
-            <label for="effective_hours">Effective hours / week</label>
-            <span class="readout" id="effective_hours-readout">12.5</span>
-          </div>
-          <p class="field-help">Actual focused work hours per person per week — not hours in the office. 15–20 is typical if this is one of several priorities, 30+ if it's the sole focus.</p>
-          <input type="range" id="effective_hours" min="1" max="60" step="0.5" value="12.5" />
-          <div class="scale-labels"><span>1 hr</span><span>60 hrs</span></div>
-        </div>
-
-        <div class="field">
-          <div class="field-top">
-            <label for="experience">Team experience</label>
-            <span class="readout" id="experience-readout">2 yrs</span>
-          </div>
-          <p class="field-help">Average years the team has spent on this type of work. Higher experience trims both cost and duration in the estimate.</p>
-          <input type="range" id="experience" min="0" max="10" step="1" value="2" />
-          <div class="scale-labels"><span>0 yrs</span><span>10 yrs</span></div>
-        </div>
-
-        <div class="field">
-          <div class="field-top">
-            <label for="hourly_rate">Hourly rate</label>
-            <span class="readout" id="hourly_rate-readout">22 DT</span>
-          </div>
-          <p class="field-help">Your team's blended cost per hour. This anchors the cost estimate to real money — a freelancer's rate and an agency's rate should give very different totals for the same work.</p>
-          <input type="range" id="hourly_rate" min="5" max="200" step="1" value="22" />
-          <div class="scale-labels"><span id="hourly_rate-min-label">5 DT/hr</span><span id="hourly_rate-max-label">200 DT/hr</span></div>
-        </div>
-
       </div>
 
-      <button type="submit" class="submit-btn" id="submit-btn">
-        <span class="spinner"></span>
-        <span class="btn-text">Run estimate</span>
-        <svg class="arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-      </button>
-    </form>
+      <form id="predict-form" novalidate>
+        <div class="fields">
 
-    <div class="error" id="error">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
-      <span id="error-text"></span>
-    </div>
+          <div class="field">
+            <div class="field-top">
+              <label for="task_complexity">Task complexity</label>
+              <span class="hint" data-tip="How intricate the work is: 1 is routine, well-understood work; 5 is unfamiliar territory with a lot of unknowns or moving parts.">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>
+                </span>
+              <span class="readout" id="task_complexity-readout">3</span>
+            </div>
+            <input type="range" id="task_complexity" min="1" max="5" step="1" value="3" />
+            <div class="scale-labels"><span>1 · routine</span><span>5 · complex</span></div>
+          </div>
 
-    <div class="results" id="results">
-      <div class="result-cell">
-        <div class="label">Estimated cost</div>
-        <div class="value" id="result-cost"></div>
+          <div class="field">
+            <div class="field-top">
+              <label for="team_size">Team size</label>
+              <span class="hint" data-tip="Number of people actively working the project. Bigger teams finish faster but coordination overhead eats into that gain.">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>
+                </span>
+              <span class="readout" id="team_size-readout">5</span>
+            </div>
+            <input type="range" id="team_size" min="1" max="10" step="1" value="5" />
+            <div class="scale-labels"><span>1 person</span><span>10 people</span></div>
+          </div>
+
+          <div class="field">
+            <div class="field-top">
+              <label for="effective_hours">Effective hours / week</label>
+              <span class="hint" data-tip="Actual focused work hours per person per week — not hours in the office. 15–20 is typical if this is one of several priorities, 30+ if it's the sole focus.">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>
+                </span>
+              <span class="readout" id="effective_hours-readout">12.5</span>
+            </div>
+            <input type="range" id="effective_hours" min="1" max="60" step="0.5" value="12.5" />
+            <div class="scale-labels"><span>1 hr</span><span>60 hrs</span></div>
+          </div>
+
+          <div class="field">
+            <div class="field-top">
+              <label for="experience">Team experience</label>
+              <span class="hint" data-tip="Average years the team has spent on this type of work. Higher experience trims both cost and duration in the estimate.">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>
+                </span>
+              <span class="readout" id="experience-readout">2 yrs</span>
+            </div>
+            <input type="range" id="experience" min="0" max="10" step="1" value="2" />
+            <div class="scale-labels"><span>0 yrs</span><span>10 yrs</span></div>
+          </div>
+
+          <div class="field">
+            <div class="field-top">
+              <label for="hourly_rate">Hourly rate</label>
+              <span class="hint" data-tip="Your team's blended cost per hour. This anchors the cost estimate to real money — a freelancer's rate and an agency's rate should give very different totals for the same work.">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01" stroke-linecap="round"/></svg>
+                </span>
+              <span class="readout" id="hourly_rate-readout">22 DT</span>
+            </div>
+            <input type="range" id="hourly_rate" min="5" max="200" step="1" value="22" />
+            <div class="scale-labels"><span id="hourly_rate-min-label">5 DT/hr</span><span id="hourly_rate-max-label">200 DT/hr</span></div>
+          </div>
+
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">
+          <span class="spinner"></span>
+          <span class="btn-text">Run estimate</span>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+    </section>
+
+    <!-- results -->
+    <section class="panel results-panel">
+      <div class="panel-head">
+        <div>
+          <h2>Forecast output</h2>
+          <div class="sub">RANDOM_FOREST · SYNTHETIC TRAINING SET</div>
+        </div>
       </div>
-      <div class="result-cell">
-        <div class="label">Estimated duration</div>
-        <div class="value" id="result-duration"></div>
-      </div>
-    </div>
 
-    <div class="footnote">
-      Estimates come from a random forest model trained on synthetic project data — treat them as a rough starting point, not a guarantee. Currency conversion uses fixed approximate rates, not live exchange rates, and applies to both the hourly rate you enter and the cost shown.
+      <div class="error" id="error">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <span id="error-text"></span>
+      </div>
+
+      <div class="out-body">
+        <div class="out-empty" id="out-empty">
+          <div class="glyph">[ ]</div>
+          <p>Awaiting input — adjust the parameters or hit <b>Run estimate</b> to generate a forecast.</p>
+        </div>
+
+        <div class="out" id="out">
+          <div class="metric">
+            <div class="label">Estimated cost</div>
+            <div class="value" id="result-cost"></div>
+          </div>
+          <div class="metric">
+            <div class="label">Estimated duration</div>
+            <div class="value" id="result-duration"></div>
+            <div class="extra" id="duration-extra"></div>
+          </div>
+
+          <div class="kv">
+            <div class="item"><div class="k">Weekly capacity</div><div class="v" id="kv-capacity">—</div></div>
+            <div class="item"><div class="k">Est. person-hours</div><div class="v" id="kv-hours">—</div></div>
+            <div class="item"><div class="k">Calendar weeks</div><div class="v" id="kv-weeks">—</div></div>
+            <div class="item"><div class="k">Burn rate / wk</div><div class="v" id="kv-burn">—</div></div>
+          </div>
+
+          <div class="spark-wrap">
+            <div class="k"><span>Cost history — this session</span><span class="trend" id="spark-trend"></span></div>
+            <canvas id="spark"></canvas>
+          </div>
+
+          <div class="footnote">
+            Estimates come from a random forest model trained on synthetic project data — a rough starting point, not a guarantee. Currency conversion uses fixed approximate rates and applies to both the hourly rate and the cost shown.
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======= status bar ======= -->
+  <footer>
+    <span id="ft-status" class="ok">● MODEL READY</span>
+    <span class="sep">|</span>
+    <span id="ft-latency">LATENCY — ms</span>
+    <span class="sep">|</span>
+    <span id="ft-updated">LAST RUN —</span>
+    <div class="right">
+      <span>ENDPOINT /api/predict</span>
+      <span class="sep">|</span>
+      <span>© 2026</span>
     </div>
-  </div>
+  </footer>
 
 </div>
 
@@ -610,29 +502,29 @@
   function fromDT(valueDT, currency) { return valueDT * RATES[currency]; }
   function roundNice(value) { return Math.round(value * 100) / 100; }
 
-  const pillWrap = document.getElementById('currency-pills');
-  const hourlyRateInput = document.getElementById('hourly_rate');
-  const hourlyRateReadout = document.getElementById('hourly_rate-readout');
-  const hourlyRateMinLabel = document.getElementById('hourly_rate-min-label');
-  const hourlyRateMaxLabel = document.getElementById('hourly_rate-max-label');
+  const $ = (id) => document.getElementById(id);
+  const pillWrap = $('currency-pills');
+  const hourlyRateInput = $('hourly_rate');
+  const hourlyRateReadout = $('hourly_rate-readout');
+  const hourlyRateMinLabel = $('hourly_rate-min-label');
+  const hourlyRateMaxLabel = $('hourly_rate-max-label');
+  const liveTag = $('live-tag'), liveTagText = $('live-tag-text');
+  const ftStatus = $('ft-status'), ftLatency = $('ft-latency'), ftUpdated = $('ft-updated');
 
   let currentCurrency = 'DT';
 
   /* gradient fill on range inputs */
   function paintRange(input) {
     const min = Number(input.min), max = Number(input.max), val = Number(input.value);
-    const pct = ((val - min) / (max - min)) * 100;
-    input.style.setProperty('--fill', pct + '%');
+    input.style.setProperty('--fill', (((val - min) / (max - min)) * 100) + '%');
   }
 
   function applyCurrencyToHourlyRate(newCurrency, oldCurrency) {
     const oldValueDT = toDT(Number(hourlyRateInput.value), oldCurrency);
-
     hourlyRateInput.min = roundNice(fromDT(BASE_RATE_MIN_DT, newCurrency));
     hourlyRateInput.max = roundNice(fromDT(BASE_RATE_MAX_DT, newCurrency));
     hourlyRateInput.step = newCurrency === 'DT' ? 1 : 0.5;
     hourlyRateInput.value = roundNice(fromDT(oldValueDT, newCurrency));
-
     hourlyRateReadout.textContent = `${hourlyRateInput.value} ${newCurrency}`;
     hourlyRateMinLabel.textContent = `${hourlyRateInput.min} ${newCurrency}/hr`;
     hourlyRateMaxLabel.textContent = `${hourlyRateInput.max} ${newCurrency}/hr`;
@@ -642,11 +534,10 @@
   pillWrap.addEventListener('click', (e) => {
     const btn = e.target.closest('button[data-cur]');
     if (!btn || btn.dataset.cur === currentCurrency) return;
-    const newCurrency = btn.dataset.cur;
-    applyCurrencyToHourlyRate(newCurrency, currentCurrency);
-    currentCurrency = newCurrency;
+    applyCurrencyToHourlyRate(btn.dataset.cur, currentCurrency);
+    currentCurrency = btn.dataset.cur;
     pillWrap.querySelectorAll('button').forEach(b => b.classList.toggle('active', b === btn));
-    renderCost();
+    renderCost(); renderKV(); scheduleRun(0); // re-run so burn rate converts
   });
 
   hourlyRateInput.value = BASE_RATE_DEFAULT_DT;
@@ -655,39 +546,47 @@
   const fields = ['task_complexity', 'team_size', 'effective_hours', 'experience', 'hourly_rate'];
 
   function bump(el) {
-    el.classList.remove('bump');
-    void el.offsetWidth;
-    el.classList.add('bump');
+    el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
   }
 
   fields.forEach((id) => {
-    const input = document.getElementById(id);
-    const readout = document.getElementById(`${id}-readout`);
+    const input = $(id);
+    const readout = $(`${id}-readout`);
     paintRange(input);
-
     const format = (val) => {
       if (id === 'experience') return `${val} yrs`;
       if (id === 'hourly_rate') return `${val} ${currentCurrency}`;
       return val;
     };
-
     input.addEventListener('input', () => {
       readout.textContent = format(input.value);
       paintRange(input);
       bump(readout);
     });
+    // auto re-estimate when the slider is released
+    input.addEventListener('change', () => scheduleRun(350));
   });
 
-  const form = document.getElementById('predict-form');
-  const submitBtn = document.getElementById('submit-btn');
+  const form = $('predict-form');
+  const submitBtn = $('submit-btn');
   const btnText = submitBtn.querySelector('.btn-text');
-  const resultsBox = document.getElementById('results');
-  const resultCost = document.getElementById('result-cost');
-  const resultDuration = document.getElementById('result-duration');
-  const errorBox = document.getElementById('error');
-  const errorText = document.getElementById('error-text');
+  const errorBox = $('error'), errorText = $('error-text');
+  const outEmpty = $('out-empty'), out = $('out');
+  const resultCost = $('result-cost'), resultDuration = $('result-duration'), durationExtra = $('duration-extra');
 
-  let lastCostDT = null;
+  let lastCostDT = null, lastDurationDays = null;
+  let history = []; // {costDT, t}
+  let debounceTimer = null;
+
+  function setStatus(mode, text) {
+    liveTag.classList.remove('busy', 'err');
+    ftStatus.classList.remove('ok', 'warn');
+    if (mode === 'busy') { liveTag.classList.add('busy'); ftStatus.classList.remove('ok'); }
+    if (mode === 'err')  { liveTag.classList.add('err'); ftStatus.classList.add('warn'); }
+    if (mode === 'ok')   { ftStatus.classList.add('ok'); }
+    liveTagText.textContent = text;
+    ftStatus.textContent = (mode === 'err' ? '● ' : '● ') + text;
+  }
 
   function renderCost() {
     if (lastCostDT === null) return;
@@ -695,48 +594,144 @@
     resultCost.innerHTML = `${converted.toLocaleString(undefined, { maximumFractionDigits: 2 })}<span class="unit">${currentCurrency}</span>`;
   }
 
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    resultsBox.classList.remove('show');
+  function renderKV() {
+    if (lastDurationDays === null) return;
+    const team = Number($('team_size').value);
+    const hrs = Number($('effective_hours').value);
+    const rateDT = toDT(Number(hourlyRateInput.value), currentCurrency);
+    const capacity = team * hrs;
+    const weeks = lastDurationDays / 7;
+    const personHours = Math.round(weeks * capacity);
+    const burnDT = capacity * rateDT;
+    const burn = fromDT(burnDT, currentCurrency);
+    $('kv-capacity').innerHTML = `${capacity.toLocaleString()} <em>hrs/wk</em>`;
+    $('kv-hours').innerHTML = `${personHours.toLocaleString()} <em>hrs</em>`;
+    $('kv-weeks').innerHTML = `${weeks.toFixed(1)} <em>wks</em>`;
+    $('kv-burn').innerHTML = `${burn.toLocaleString(undefined,{maximumFractionDigits:0})} <em>${currentCurrency}/wk</em>`;
+  }
+
+  /* ---------- sparkline ---------- */
+  const spark = $('spark'), trendEl = $('spark-trend');
+  function drawSpark() {
+    const dpr = window.devicePixelRatio || 1;
+    const w = spark.clientWidth, h = spark.clientHeight;
+    if (!w || !h) return;
+    spark.width = w * dpr; spark.height = h * dpr;
+    const ctx = spark.getContext('2d');
+    ctx.scale(dpr, dpr);
+    ctx.clearRect(0, 0, w, h);
+    if (history.length < 2) return;
+
+    const vals = history.map(p => p.costDT);
+    const min = Math.min(...vals), max = Math.max(...vals);
+    const span = (max - min) || 1;
+    const px = (i) => (i / (vals.length - 1)) * (w - 8) + 4;
+    const py = (v) => h - 6 - ((v - min) / span) * (h - 14);
+
+    // area fill
+    const grad = ctx.createLinearGradient(0, 0, w, 0);
+    grad.addColorStop(0, 'rgba(124,92,255,.35)');
+    grad.addColorStop(.55, 'rgba(0,212,255,.35)');
+    grad.addColorStop(1, 'rgba(0,224,184,.35)');
+    ctx.beginPath();
+    ctx.moveTo(px(0), h);
+    vals.forEach((v, i) => ctx.lineTo(px(i), py(v)));
+    ctx.lineTo(px(vals.length - 1), h);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+
+    // line
+    ctx.beginPath();
+    vals.forEach((v, i) => i ? ctx.lineTo(px(i), py(v)) : ctx.moveTo(px(i), py(v)));
+    ctx.strokeStyle = '#00d4ff';
+    ctx.lineWidth = 1.8;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // last point
+    const lx = px(vals.length - 1), ly = py(vals[vals.length - 1]);
+    ctx.beginPath(); ctx.arc(lx, ly, 3.2, 0, Math.PI * 2);
+    ctx.fillStyle = '#fff';
+    ctx.shadowColor = '#00e0b8'; ctx.shadowBlur = 8;
+    ctx.fill(); ctx.shadowBlur = 0;
+
+    // trend
+    const delta = vals[vals.length - 1] - vals[0];
+    const pct = Math.abs((delta / (vals[0] || 1)) * 100).toFixed(0);
+    trendEl.textContent = `${delta >= 0 ? '▲' : '▼'} ${pct}% vs first run`;
+    trendEl.style.color = delta >= 0 ? 'var(--danger)' : 'var(--mint)';
+  }
+  window.addEventListener('resize', drawSpark);
+
+  /* ---------- prediction ---------- */
+  function buildPayload() {
+    return {
+      task_complexity: Number($('task_complexity').value),
+      team_size: Number($('team_size').value),
+      effective_hours: Number($('effective_hours').value),
+      experience: Number($('experience').value),
+      hourly_rate: toDT(Number(hourlyRateInput.value), currentCurrency),
+    };
+  }
+
+  function scheduleRun(delay) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(run, delay);
+  }
+
+  let running = false, pending = false;
+
+  async function run() {
+    if (running) { pending = true; return; }
+    running = true;
     errorBox.classList.remove('show');
     submitBtn.disabled = true;
     submitBtn.classList.add('loading');
-    btnText.textContent = 'Running…';
+    btnText.textContent = 'Estimating…';
+    setStatus('busy', 'ESTIMATING');
 
-    const payload = {
-      task_complexity: Number(document.getElementById('task_complexity').value),
-      team_size: Number(document.getElementById('team_size').value),
-      effective_hours: Number(document.getElementById('effective_hours').value),
-      experience: Number(document.getElementById('experience').value),
-      hourly_rate: toDT(Number(hourlyRateInput.value), currentCurrency),
-    };
-
+    const t0 = performance.now();
     try {
-      const res = await fetch('/api/predict', {
+      const res = await fetch('http://localhost:5000/api/predict', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(buildPayload()),
       });
       const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.error || 'Prediction failed');
 
-      if (!res.ok || !data.success) {
-        throw new Error(data.error || 'Prediction failed');
-      }
-
+      const ms = Math.round(performance.now() - t0);
       lastCostDT = data.predicted_cost;
+      lastDurationDays = data.predicted_duration_days;
+      history.push({ costDT: lastCostDT, t: Date.now() });
+      if (history.length > 20) history.shift();
+
+      outEmpty.style.display = 'none';
+      out.classList.add('show');
       renderCost();
-      resultDuration.innerHTML = `${Number(data.predicted_duration_days).toLocaleString()}<span class="unit">days</span>`;
-      resultsBox.classList.add('show');
-      resultsBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      resultDuration.innerHTML = `${Number(lastDurationDays).toLocaleString()}<span class="unit">days</span>`;
+      durationExtra.textContent = `≈ ${(lastDurationDays / 30.44).toFixed(1)} months · ${(lastDurationDays / 7).toFixed(1)} weeks`;
+      renderKV();
+      requestAnimationFrame(drawSpark);
+
+      ftLatency.textContent = `LATENCY ${ms} ms`;
+      ftUpdated.textContent = `LAST RUN ${new Date().toLocaleTimeString()}`;
+      setStatus('ok', 'READY');
     } catch (err) {
       errorText.textContent = err.message;
       errorBox.classList.add('show');
+      setStatus('err', 'ERROR');
     } finally {
+      running = false;
       submitBtn.disabled = false;
       submitBtn.classList.remove('loading');
       btnText.textContent = 'Run estimate';
+      if (pending) { pending = false; scheduleRun(0); }
     }
-  });
+  }
+
+  form.addEventListener('submit', (e) => { e.preventDefault(); scheduleRun(0); });
 </script>
 
 </body>
